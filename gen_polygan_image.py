@@ -22,7 +22,7 @@ for imageFile in os.listdir('data/'):
   tree = ET.parse('label/' + name + '.xml')
   polygon = tree.find('object/polygon')
   
-  mask = Image.new('RGBA', im.size)
+  mask = Image.new('RGB', im.size)
   #該圖有polygon
   if(polygon!=None):
     coord_list = []
