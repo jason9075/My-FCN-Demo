@@ -17,7 +17,7 @@ for imageFile in os.listdir('data/'):
   if(not name.startswith('frame')):
     continue
 
-  im = Image.open('data/' + name + '.jpg')
+  im = Image.open('data/' + name + '.png')
   
   tree = ET.parse('label/' + name + '.xml')
   polygon = tree.find('object/polygon')

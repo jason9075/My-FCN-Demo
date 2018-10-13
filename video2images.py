@@ -12,7 +12,7 @@ vidcap = cv2.VideoCapture('video/room.mp4')
 success,image = vidcap.read()
 count = 1
 while success:
-  cv2.imwrite("data/frame-" + str(count).zfill(5) + ".jpg", image)     # save frame as JPEG file      
+  cv2.imwrite("data/frame-" + str(count).zfill(5) + ".png", image)     # save frame as JPEG file      
 
   success,image = vidcap.read()
   print('Read a new frame: ', success)
