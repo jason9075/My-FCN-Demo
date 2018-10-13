@@ -10,23 +10,9 @@ import cv2
 
 vidcap = cv2.VideoCapture('video/room.mp4')
 success,image = vidcap.read()
-count = 0
+count = 1
 while success:
-  if(count % 5 == 0):
-    cv2.imwrite("data/lego1-%d.jpg" % count, image)     # save frame as JPEG file      
-
-  success,image = vidcap.read()
-  print('Read a new frame: ', success)
-  count += 1
-  
-  
-  
-vidcap = cv2.VideoCapture('video/lego2.mp4')
-success,image = vidcap.read()
-count = 0
-while success:
-  if(count % 5 == 0):
-    cv2.imwrite("data/lego2-%d.jpg" % count, image)     # save frame as JPEG file      
+  cv2.imwrite("data/frame-" + str(count).zfill(5) + ".jpg", image)     # save frame as JPEG file      
 
   success,image = vidcap.read()
   print('Read a new frame: ', success)
