@@ -1,0 +1,68 @@
+<?xml version="1.0" ?>
+<annotation>
+<folder>data</folder>
+<filename>frame-00877.jpg</filename>
+<path>/Users/jason9075/Documents/Python/my_fcn/data/frame-00877.jpg</path>
+<source>
+    <database>Unknown</database>
+</source>
+<size>
+    <width>720</width>
+    <height>1280</height>
+    <depth>3</depth>
+</size>
+
+<segmented>0</segmented>
+    <object>
+    <name>me</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <polygon>
+			<x1>725</x1>
+			<y1>117</y1>
+			<x2>696</x2>
+			<y2>155</y2>
+			<x3>698</x3>
+			<y3>230</y3>
+			<x4>699</x4>
+			<y4>270</y4>
+			<x5>654</x5>
+			<y5>307</y5>
+			<x6>595</x6>
+			<y6>362</y6>
+			<x7>566</x7>
+			<y7>451</y7>
+			<x8>557</x8>
+			<y8>533</y8>
+			<x9>539</x9>
+			<y9>672</y9>
+			<x10>544</x10>
+			<y10>775</y10>
+			<x11>579</x11>
+			<y11>830</y11>
+			<x12>606</x12>
+			<y12>762</y12>
+			<x13>624</x13>
+			<y13>515</y13>
+			<x14>630</x14>
+			<y14>736</y14>
+			<x15>639</x15>
+			<y15>879</y15>
+			<x16>674</x16>
+			<y16>1005</y16>
+			<x17>661</x17>
+			<y17>1122</y17>
+			<x18>626</x18>
+			<y18>1250</y18>
+			<x19>712</x19>
+			<y19>1272</y19>
+			<x20>721</x20>
+			<y20>1245</y20>
+			<x21>705</x21>
+			<y21>1205</y21>
+			<x22>729</x22>
+			<y22>1173</y22>
+		</polygon>
+</object>
+</annotation>

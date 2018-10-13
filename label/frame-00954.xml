@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<annotation>
+<folder>data</folder>
+<filename>frame-00954.jpg</filename>
+<path>/Users/jason9075/Documents/Python/my_fcn/data/frame-00954.jpg</path>
+<source>
+    <database>Unknown</database>
+</source>
+<size>
+    <width>720</width>
+    <height>1280</height>
+    <depth>3</depth>
+</size>
+
+<segmented>0</segmented>
+</annotation>
