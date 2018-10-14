@@ -27,6 +27,7 @@ IMAGE_SHAPE = (352, 352)
 EPOCHS = 40
 BATCH_SIZE = 16
 DROPOUT = 0.7
+DEBUG = False
 
 # Specify these directory paths
 
@@ -34,6 +35,7 @@ runs_dir = '.'
 training_dir ='data/'
 mask_dir ='mask/'
 vgg_path = 'vgg/'
+model_output_dir = 'model_output/'
 
 #--------------------------
 # PLACEHOLDER TENSORS
@@ -105,15 +107,15 @@ def optimize(nn_last_layer, correct_label, learning_rate, num_classes):
 
 def centeredCrop(img, image_shape):
 
-   width =  np.size(img,1)
-   height =  np.size(img,0)
+  width =  np.size(img,1)
+  height =  np.size(img,0)
 
-   left = np.ceil((width - image_shape[1])/2.)
-   top = np.ceil((height - image_shape[0])/2.)
-   right = np.floor((width + image_shape[1])/2.)
-   bottom = np.floor((height + image_shape[0])/2.)
-   cImg = img[int(top):int(bottom), int(left):int(right)]
-   return cImg
+  left = np.ceil((width - image_shape[1])/2.)
+  top = np.ceil((height - image_shape[0])/2.)
+  right = np.floor((width + image_shape[1])/2.)
+  bottom = np.floor((height + image_shape[0])/2.)
+  cImg = img[int(top):int(bottom), int(left):int(right)]
+  return cImg
    
 def gen_batch_function(image_shape):
     
@@ -127,6 +129,9 @@ def gen_batch_function(image_shape):
     background_color = np.array([0, 0, 0])
 
     random.shuffle(image_paths)
+    if(DEBUG):
+      image_paths = image_paths[0:batch_size*2]
+
     for batch_i in range(0, len(image_paths), batch_size):
       images = []
       gt_images = []
@@ -178,7 +183,7 @@ def train_nn(sess, epochs, batch_size, train_op,
 def run():
 
   # A function to get batches
-  
+    
   with tf.Session() as session:        
     # Returns the three layers, keep probability and input layer from the vgg architecture
     image_input, keep_prob, layer3, layer4, layer7 = load_vgg(session, vgg_path)
@@ -201,11 +206,16 @@ def run():
     print("Model build successful, starting training")
 
     # Train the neural network
+    if(DEBUG):
+      EPOCHS=1
     train_nn(session, EPOCHS, BATCH_SIZE, train_op,
              cross_entropy_loss, image_input,
              correct_label, keep_prob, learning_rate)
     
     print("All done!")
+    saver = tf.train.Saver()
+
+    save_path = saver.save(session, model_output_dir + "model.ckpt")
     
 if __name__ == '__main__':
   run()

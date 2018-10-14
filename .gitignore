@@ -1,3 +1,7 @@
 vgg/saved_model.pb
 variables.data-00000-of-00001
 variables.index
+model_output/checkpoint
+model_output/model.ckpt.data-00000-of-00001
+model_output/model.ckpt.index
+model_output/model.ckpt.meta
