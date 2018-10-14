@@ -206,8 +206,8 @@ def run():
     print("Model build successful, starting training")
 
     # Train the neural network
-    if(DEBUG):
-      EPOCHS=1
+#    if(DEBUG):
+#      EPOCHS=1
     train_nn(session, EPOCHS, BATCH_SIZE, train_op,
              cross_entropy_loss, image_input,
              correct_label, keep_prob, learning_rate)
