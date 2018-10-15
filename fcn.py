@@ -20,16 +20,15 @@ from glob import glob
 #--------------------------
 
 # Tune these parameters
-
-NUMBER_OF_CLASSES = 2
-IMAGE_RESIZE_SHAPE = (640, 360)
-IMAGE_SHAPE = (352, 352)
-EPOCHS = 40
-BATCH_SIZE = 16
-DROPOUT = 0.7
 DEBUG = False
 SAVE_MODEL = True
 SAVE_LOG = False
+NUMBER_OF_CLASSES = 2
+IMAGE_RESIZE_SHAPE = (640, 360)
+IMAGE_SHAPE = (352, 352)
+EPOCHS = 1 if DEBUG else 20
+BATCH_SIZE = 16
+DROPOUT = 0.7
 
 # Specify these directory paths
 
@@ -184,10 +183,7 @@ def train_nn(sess, epochs, batch_size, train_op,
   
 def run():
 
-  # A function to get batches
-  if(DEBUG):
-      EPOCHS=1
-    
+  # A function to get batches    
   with tf.Session() as session:        
     # Returns the three layers, keep probability and input layer from the vgg architecture
     image_input, keep_prob, layer3, layer4, layer7 = load_vgg(session, vgg_path)
