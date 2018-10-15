@@ -22,7 +22,7 @@ from glob import glob
 # Tune these parameters
 
 NUMBER_OF_CLASSES = 2
-IMAGE_RESIZE_SHAPE = (360, 640)
+IMAGE_RESIZE_SHAPE = (640, 360)
 IMAGE_SHAPE = (352, 352)
 EPOCHS = 40
 BATCH_SIZE = 16
@@ -222,5 +222,28 @@ def run():
       saver = tf.train.Saver()
       save_path = saver.save(session, model_output_dir + "model.ckpt")
       
+# =============================================================================
+#       
+# from PIL import Image
+# 
+# def predict():
+#   
+#   saver = tf.train.Saver()
+#   image = scipy.misc.imresize(scipy.misc.imread("data/frame-00711.png"), IMAGE_RESIZE_SHAPE)
+# 
+#   image = centeredCrop(image, IMAGE_SHAPE)
+#   
+#   ndarray_convert_img= Image.fromarray(image)
+#   ndarray_convert_img.show()
+#   type(image)
+# 
+# 
+#   with tf.Session() as sess:
+#     
+#     saver.restore(sess, model_output_dir + "model.ckpt")
+#     
+#   
+# =============================================================================
+  
 if __name__ == '__main__':
   run()
