@@ -28,6 +28,8 @@ EPOCHS = 40
 BATCH_SIZE = 16
 DROPOUT = 0.7
 DEBUG = False
+SAVE_MODEL = True
+SAVE_LOG = False
 
 # Specify these directory paths
 
@@ -170,8 +172,8 @@ def train_nn(sess, epochs, batch_size, train_op,
     for X_batch, gt_batch in gen_function(batch_size):
       
       loss, _ = sess.run([cross_entropy_loss, train_op],
-      feed_dict={input_image: X_batch, correct_label: gt_batch,
-      keep_prob: keep_prob_value, learning_rate:learning_rate_value})
+                         feed_dict={input_image: X_batch, correct_label: gt_batch,
+                                    keep_prob: keep_prob_value, learning_rate:learning_rate_value})
 
       total_loss += loss;
 
@@ -201,21 +203,24 @@ def run():
     session.run(tf.global_variables_initializer())
     session.run(tf.local_variables_initializer())
 
-    #writer = tf.summary.FileWriter("logs/", session.graph)
-
     print("Model build successful, starting training")
 
     # Train the neural network
-#    if(DEBUG):
-#      EPOCHS=1
+    if(DEBUG):
+      EPOCHS=1
+      
     train_nn(session, EPOCHS, BATCH_SIZE, train_op,
              cross_entropy_loss, image_input,
              correct_label, keep_prob, learning_rate)
     
-    print("All done!")
-    saver = tf.train.Saver()
+    if(SAVE_LOG):
+      writer = tf.summary.FileWriter("logs/", session.graph)
 
-    save_path = saver.save(session, model_output_dir + "model.ckpt")
     
+    print("All done!")
+    if(SAVE_MODEL):
+      saver = tf.train.Saver()
+      save_path = saver.save(session, model_output_dir + "model.ckpt")
+      
 if __name__ == '__main__':
   run()
