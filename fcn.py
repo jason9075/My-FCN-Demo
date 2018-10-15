@@ -26,7 +26,7 @@ SAVE_LOG = False
 NUMBER_OF_CLASSES = 2
 IMAGE_RESIZE_SHAPE = (640, 360)
 IMAGE_SHAPE = (352, 352)
-EPOCHS = 1 if DEBUG else 10
+EPOCHS = 1 if DEBUG else 20
 BATCH_SIZE = 16
 DROPOUT = 0.7
 
@@ -218,17 +218,26 @@ def run():
       saver = tf.train.Saver()
       save_path = saver.save(session, model_output_dir + "model.ckpt")
       
-      
 # =============================================================================
+#       
 # from PIL import Image
 # 
 # def predict():
 #   
 #   saver = tf.train.Saver()
 #   image = scipy.misc.imresize(scipy.misc.imread("data/frame-00711.png"), IMAGE_RESIZE_SHAPE)
+#   gt_image = scipy.misc.imresize(scipy.misc.imread("mask/frame-00711.png"), IMAGE_RESIZE_SHAPE)
+# 
 # 
 #   image = centeredCrop(image, IMAGE_SHAPE)
 #   image = np.expand_dims(image, axis=0)
+#   
+#   gt_image = centeredCrop(gt_image, IMAGE_SHAPE)  
+#   gt_bg = np.all(gt_image == np.array([0, 0, 0]), axis=2)
+#   gt_bg = gt_bg.reshape(*gt_bg.shape, 1)
+#   gt_image = np.concatenate((gt_bg, np.invert(gt_bg)), axis=2)
+#   gt_image = np.expand_dims(gt_image, axis=0)
+# 
 # # =============================================================================
 # #   ndarray_convert_img= Image.fromarray(image)
 # #   ndarray_convert_img.show()
@@ -246,10 +255,34 @@ def run():
 # # =============================================================================
 #     
 #     saver.restore(sess, model_output_dir + "model.ckpt")
-#     result = sess.run(model_output, feed_dict={image_input: image,
+#     #result = sess.run(model_output, feed_dict={image_input: image,
+#     #                                           keep_prob: 0.5})
+#     
+#     correct_label_reshaped = tf.reshape(correct_label, (-1, 2))
+#     cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=model_output, labels=correct_label_reshaped[:])
+#     # Take mean for total loss
+#     loss_op = tf.reduce_mean(cross_entropy, name="fcn_loss") 
+#     
+#     lost_value = sess.run(cross_entropy, feed_dict={image_input: image, correct_label: gt_image,
 #                                                keep_prob: 0.5})
+#       
+#       
 #     result = result[0]
-#     result_img=Image.fromarray(result[0])
+#     result = np.argmax(result, axis=2)
+#     
+#     img_array = []
+#     for x in result.reshape(352*352):
+#         if x == 0:
+#             img_array.append((0,0,0))
+#         elif x == 1:
+#             img_array.append((0,255,0))
+#     
+#     img = Image.new('RGB',(352,352))
+#     img.putdata(img_array)
+#     
+#     img.show()
+# 
+#     result_img=Image.fromarray(test)
 #     result_img.show()
 #   
 # =============================================================================
