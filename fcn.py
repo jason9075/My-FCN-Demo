@@ -185,6 +185,8 @@ def train_nn(sess, epochs, batch_size, train_op,
 def run():
 
   # A function to get batches
+  if(DEBUG):
+      EPOCHS=1
     
   with tf.Session() as session:        
     # Returns the three layers, keep probability and input layer from the vgg architecture
@@ -206,8 +208,6 @@ def run():
     print("Model build successful, starting training")
 
     # Train the neural network
-    if(DEBUG):
-      EPOCHS=1
       
     train_nn(session, EPOCHS, BATCH_SIZE, train_op,
              cross_entropy_loss, image_input,
