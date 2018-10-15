@@ -26,7 +26,7 @@ SAVE_LOG = False
 NUMBER_OF_CLASSES = 2
 IMAGE_RESIZE_SHAPE = (640, 360)
 IMAGE_SHAPE = (352, 352)
-EPOCHS = 1 if DEBUG else 20
+EPOCHS = 1 if DEBUG else 10
 BATCH_SIZE = 16
 DROPOUT = 0.7
 
@@ -218,8 +218,8 @@ def run():
       saver = tf.train.Saver()
       save_path = saver.save(session, model_output_dir + "model.ckpt")
       
+      
 # =============================================================================
-#       
 # from PIL import Image
 # 
 # def predict():
@@ -228,16 +228,29 @@ def run():
 #   image = scipy.misc.imresize(scipy.misc.imread("data/frame-00711.png"), IMAGE_RESIZE_SHAPE)
 # 
 #   image = centeredCrop(image, IMAGE_SHAPE)
-#   
-#   ndarray_convert_img= Image.fromarray(image)
-#   ndarray_convert_img.show()
-#   type(image)
-# 
-# 
+#   image = np.expand_dims(image, axis=0)
+# # =============================================================================
+# #   ndarray_convert_img= Image.fromarray(image)
+# #   ndarray_convert_img.show()
+# # 
+# # =============================================================================
 #   with tf.Session() as sess:
 #     
-#     saver.restore(sess, model_output_dir + "model.ckpt")
+# # =============================================================================
+# #     image_input, keep_prob, layer3, layer4, layer7 = load_vgg(sess, vgg_path)
+# #     model_output = layers(layer3, layer4, layer7, NUMBER_OF_CLASSES)
+# #     logits, train_op, cross_entropy_loss = optimize(model_output, correct_label, learning_rate, NUMBER_OF_CLASSES)
+# #     
+# #     sess.run(tf.global_variables_initializer())
+# #     sess.run(tf.local_variables_initializer())
+# # =============================================================================
 #     
+#     saver.restore(sess, model_output_dir + "model.ckpt")
+#     result = sess.run(model_output, feed_dict={image_input: image,
+#                                                keep_prob: 0.5})
+#     result = result[0]
+#     result_img=Image.fromarray(result[0])
+#     result_img.show()
 #   
 # =============================================================================
   
