@@ -218,74 +218,108 @@ def run():
       saver = tf.train.Saver()
       save_path = saver.save(session, model_output_dir + "model.ckpt")
       
-# =============================================================================
-#       
-# from PIL import Image
-# 
-# def predict():
-#   
-#   saver = tf.train.Saver()
-#   image = scipy.misc.imresize(scipy.misc.imread("data/frame-00711.png"), IMAGE_RESIZE_SHAPE)
-#   gt_image = scipy.misc.imresize(scipy.misc.imread("mask/frame-00711.png"), IMAGE_RESIZE_SHAPE)
-# 
-# 
-#   image = centeredCrop(image, IMAGE_SHAPE)
-#   image = np.expand_dims(image, axis=0)
-#   
-#   gt_image = centeredCrop(gt_image, IMAGE_SHAPE)  
-#   gt_bg = np.all(gt_image == np.array([0, 0, 0]), axis=2)
-#   gt_bg = gt_bg.reshape(*gt_bg.shape, 1)
-#   gt_image = np.concatenate((gt_bg, np.invert(gt_bg)), axis=2)
-#   gt_image = np.expand_dims(gt_image, axis=0)
-# 
-# # =============================================================================
-# #   ndarray_convert_img= Image.fromarray(image)
-# #   ndarray_convert_img.show()
-# # 
-# # =============================================================================
-#   with tf.Session() as sess:
-#     
-# # =============================================================================
-# #     image_input, keep_prob, layer3, layer4, layer7 = load_vgg(sess, vgg_path)
-# #     model_output = layers(layer3, layer4, layer7, NUMBER_OF_CLASSES)
-# #     logits, train_op, cross_entropy_loss = optimize(model_output, correct_label, learning_rate, NUMBER_OF_CLASSES)
-# #     
-# #     sess.run(tf.global_variables_initializer())
-# #     sess.run(tf.local_variables_initializer())
-# # =============================================================================
-#     
-#     saver.restore(sess, model_output_dir + "model.ckpt")
-#     #result = sess.run(model_output, feed_dict={image_input: image,
-#     #                                           keep_prob: 0.5})
-#     
-#     correct_label_reshaped = tf.reshape(correct_label, (-1, 2))
-#     cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=model_output, labels=correct_label_reshaped[:])
-#     # Take mean for total loss
-#     loss_op = tf.reduce_mean(cross_entropy, name="fcn_loss") 
-#     
-#     lost_value = sess.run(cross_entropy, feed_dict={image_input: image, correct_label: gt_image,
-#                                                keep_prob: 0.5})
-#       
-#       
-#     result = result[0]
-#     result = np.argmax(result, axis=2)
-#     
-#     img_array = []
-#     for x in result.reshape(352*352):
-#         if x == 0:
-#             img_array.append((0,0,0))
-#         elif x == 1:
-#             img_array.append((0,255,0))
-#     
-#     img = Image.new('RGB',(352,352))
-#     img.putdata(img_array)
-#     
-#     img.show()
-# 
-#     result_img=Image.fromarray(test)
-#     result_img.show()
-#   
-# =============================================================================
+      
+from PIL import Image
+
+def predict():
   
+  image = scipy.misc.imresize(scipy.misc.imread("data/frame-00155.png"), IMAGE_RESIZE_SHAPE)
+
+  image = centeredCrop(image, IMAGE_SHAPE)
+  image = np.expand_dims(image, axis=0)
+  
+  detect_frames = []
+  with tf.Session() as sess:
+
+    
+# =============================================================================
+#     image_input, keep_prob, layer3, layer4, layer7 = load_vgg(sess, vgg_path)
+#     model_output = layers(layer3, layer4, layer7, NUMBER_OF_CLASSES)
+#     logits, train_op, cross_entropy_loss = optimize(model_output, correct_label, learning_rate, NUMBER_OF_CLASSES)
+#     
+#     saver = tf.train.Saver()
+# =============================================================================
+    saver.restore(sess, model_output_dir + "model.ckpt")
+    count=0
+    for frame in frames:
+      frame = np.expand_dims(frame, axis=0)
+      result = sess.run(model_output, feed_dict={image_input: frame,
+                                               keep_prob: 1})
+      count = count+1
+      print("index: %d"%count)
+      detect_frames.append(result[0])
+      
+      
+  result = detect_frames[710]
+  result = np.argmax(result, axis=2)
+  
+  img_array = []
+  for x in result.reshape(352*352):
+      if x == 0:
+          img_array.append((0,0,0,0))
+      elif x == 1:
+          img_array.append((0,255,0,90))
+  
+  img = Image.new('RGBA',(352,352))
+  img.putdata(img_array)
+  
+  img.show()
+
+    result_img=Image.fromarray(test)
+    result_img.show()
+    
+import cv2
+
+    
+def video():
+  vidcap = cv2.VideoCapture('video/room.mp4')  
+  frames = []
+  success, frame = vidcap.read()
+  count=0
+  while success:
+    frame = scipy.misc.imresize(frame, IMAGE_RESIZE_SHAPE)
+    frame = centeredCrop(frame, IMAGE_SHAPE)
+    frames.append(frame)
+    success, frame = vidcap.read()
+
+    
+  
+  out = cv2.VideoWriter('outpy.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 30, IMAGE_SHAPE)
+  for i in range(0, len(frames)):
+    frame = Image.fromarray(frames[i][...,::-1], 'RGB').convert("RGBA")  #BGR->RGB->RGBA
+ 
+    detect_frame = np.argmax(detect_frames[i], axis=2)
+    img_array = []
+    for x in detect_frame.reshape(352*352):
+        if x == 0:
+            img_array.append((0,0,0,0))
+        elif x == 1:
+            img_array.append((0,255,0,180))
+    
+    overlay = Image.new('RGBA',(352,352))
+    overlay.putdata(img_array)
+    
+    frame.paste(overlay, (0, 0), overlay)
+
+    out.write(np.asarray(frame))
+  out.release()
+  
+
+  
+def realtime():
+  cap = cv2.VideoCapture(0)
+  cap.set(3, 352) #width
+  cap.set(4, 352) #height
+  while(True):
+    ret, frame = cap.read()
+  
+    cv2.imshow('frame', frame)
+  
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+      break
+
+  cap.release()
+  cv2.destroyAllWindows()
+    
 if __name__ == '__main__':
   run()
